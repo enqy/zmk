@@ -13,6 +13,10 @@
       system: let
         pkgs = import nixpkgs {
           inherit system;
+          config = {
+            allowUnfree = true;
+            segger-jlink.acceptLicense = true;
+          };
         };
       in {
         devShell = pkgs.mkShell {
@@ -23,6 +27,7 @@
             dtc
             gcc-arm-embedded
             ninja
+            nrf-command-line-tools
 
             (python3.withPackages (ps:
               with ps; [
