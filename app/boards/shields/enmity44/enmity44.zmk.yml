@@ -1,0 +1,11 @@
+file_format: "1"
+id: enmity44
+name: enmity44
+type: shield
+url: https://github.com/enqy/enmity44
+requires: [xiao_ble]
+features:
+  - keys
+siblings:
+  - enmity44_left
+  - enmity44_right

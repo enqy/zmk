@@ -1,0 +1,16 @@
+if SHIELD_ENMITY44_LEFT
+
+config ZMK_KEYBOARD_NAME
+    default "enmity44"
+
+config ZMK_SPLIT_ROLE_CENTRAL
+    default y
+
+endif
+
+if SHIELD_ENMITY44_LEFT || SHIELD_ENMITY44_RIGHT
+
+config ZMK_SPLIT
+    default y
+
+endif
