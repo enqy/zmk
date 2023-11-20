@@ -13,13 +13,12 @@ Definition file: [zmk/app/Kconfig](https://github.com/zmkfirmware/zmk/blob/main/
 
 ### General
 
-| Config                               | Type   | Description                                                                   | Default |
-| ------------------------------------ | ------ | ----------------------------------------------------------------------------- | ------- |
-| `CONFIG_ZMK_KEYBOARD_NAME`           | string | The name of the keyboard (max 16 characters)                                  |         |
-| `CONFIG_ZMK_SETTINGS_SAVE_DEBOUNCE`  | int    | Milliseconds to wait after a setting change before writing it to flash memory | 60000   |
-| `CONFIG_ZMK_WPM`                     | bool   | Enable calculating words per minute                                           | n       |
-| `CONFIG_HEAP_MEM_POOL_SIZE`          | int    | Size of the heap memory pool                                                  | 8192    |
-| `CONFIG_ZMK_BATTERY_REPORT_INTERVAL` | int    | Battery level report interval in seconds                                      | 60      |
+| Config                              | Type   | Description                                                                   | Default |
+| ----------------------------------- | ------ | ----------------------------------------------------------------------------- | ------- |
+| `CONFIG_ZMK_KEYBOARD_NAME`          | string | The name of the keyboard (max 16 characters)                                  |         |
+| `CONFIG_ZMK_SETTINGS_SAVE_DEBOUNCE` | int    | Milliseconds to wait after a setting change before writing it to flash memory | 60000   |
+| `CONFIG_ZMK_WPM`                    | bool   | Enable calculating words per minute                                           | n       |
+| `CONFIG_HEAP_MEM_POOL_SIZE`         | int    | Size of the heap memory pool                                                  | 8192    |
 
 ### HID
 
@@ -67,6 +66,7 @@ for more information on configuring Bluetooth.
 | Config                                      | Type | Description                                                           | Default |
 | ------------------------------------------- | ---- | --------------------------------------------------------------------- | ------- |
 | `CONFIG_BT`                                 | bool | Enable Bluetooth support                                              |         |
+| `CONFIG_BT_BAS`                             | bool | Enable the Bluetooth BAS (battery reporting service)                  | y       |
 | `CONFIG_BT_MAX_CONN`                        | int  | Maximum number of simultaneous Bluetooth connections                  | 5       |
 | `CONFIG_BT_MAX_PAIRED`                      | int  | Maximum number of paired Bluetooth devices                            | 5       |
 | `CONFIG_ZMK_BLE`                            | bool | Enable ZMK as a Bluetooth keyboard                                    |         |

@@ -91,9 +91,16 @@ menu "Output Types"
 
 config ZMK_USB
     bool "USB"
+    depends on (!ZMK_SPLIT || (ZMK_SPLIT && ZMK_SPLIT_ROLE_CENTRAL))
     select USB
     select USB_DEVICE_STACK
     select USB_DEVICE_HID
+
+config ZMK_USB_BOOT
+    bool "USB Boot Protocol Support"
+    depends on ZMK_USB
+    select USB_HID_BOOT_PROTOCOL
+    select USB_DEVICE_SOF
 
 if ZMK_USB
 
@@ -148,6 +155,10 @@ config ZMK_BLE_KEYBOARD_REPORT_QUEUE_SIZE
 config ZMK_BLE_CONSUMER_REPORT_QUEUE_SIZE
     int "Max number of consumer HID reports to queue for sending over BLE"
     default 5
+
+config ZMK_BLE_MOUSE_REPORT_QUEUE_SIZE
+    int "Max number of mouse HID reports to queue for sending over BLE"
+    default 20
 
 config ZMK_BLE_CLEAR_BONDS_ON_START
     bool "Configuration that clears all bond information from the keyboard on startup."
@@ -308,13 +319,22 @@ endif
 #Display/LED Options
 endmenu
 
+menu "Mouse Options"
+
+config ZMK_MOUSE
+    bool "Enable ZMK mouse emulation"
+    default n
+
+#Mouse Options
+endmenu
+
 menu "Power Management"
 
 config ZMK_BATTERY_REPORTING
     bool "Battery level detection/reporting"
     default n
     select SENSOR
-    select BT_BAS if ZMK_BLE
+    imply BT_BAS if ZMK_BLE
 
 config ZMK_IDLE_TIMEOUT
     int "Milliseconds of inactivity before entering idle state (OLED shutoff, etc)"
@@ -575,4 +595,3 @@ osource "$(ZMK_CONFIG)/boards/shields/*/Kconfig.shield"
 
 
 source "Kconfig.zephyr"
-
