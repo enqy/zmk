@@ -87,6 +87,12 @@ config ZMK_HID_CONSUMER_REPORT_USAGES_BASIC
 
 endchoice
 
+config ZMK_HID_INDICATORS
+    bool "HID Indicators"
+    help
+      Enable HID indicators, used for detecting state of Caps/Scroll/Num Lock,
+      Kata, and Compose.
+
 menu "Output Types"
 
 config ZMK_USB
@@ -121,9 +127,9 @@ menuconfig ZMK_BLE
     select BT_SMP_APP_PAIRING_ACCEPT
     select BT_PERIPHERAL
     select BT_DIS
-    select BT_SETTINGS
-    select SETTINGS
-    imply ZMK_BATTERY_REPORTING
+    imply BT_SETTINGS if !ARCH_POSIX
+    imply SETTINGS if !ARCH_POSIX
+    imply ZMK_BATTERY_REPORTING if !ARCH_POSIX
 
 if ZMK_BLE
 
