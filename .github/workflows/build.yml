@@ -74,24 +74,8 @@ jobs:
 
                 console.log(`::group::${{ matrix.board}} ${shieldArgs.shield} Build`)
                 console.log(output.toString());
-
-                const fileExtensions = ["hex", "uf2"];
-
-                const files = fileExtensions
-                  .map(extension => "build/zephyr/zmk." + extension)
-                  .filter(path => fs.existsSync(path));
-
-                const rootDirectory = 'build/zephyr';
-                const options = {
-                    continueOnError: true
-                }
-
-                const cmakeName = shieldArgs['cmake-args'] ? '-' + (shieldArgs.nickname || shieldArgs['cmake-args'].split(' ').join('')) : '';
-                const artifactName = `${{ matrix.board }}${shieldArgs.shield ? '-' + shieldArgs.shield : ''}${cmakeName}-zmk`;
-
-                await artifact.uploadArtifact(artifactName, files, rootDirectory, options);
               } catch (e) {
-                console.error(`::error::Failed to build or upload ${{ matrix.board }} ${shieldArgs.shield} ${shieldArgs['cmake-args']}`);
+                console.error(`::error::Failed to build ${{ matrix.board }} ${shieldArgs.shield} ${shieldArgs['cmake-args']}`);
                 console.error(e);
                 error = true;
               } finally {
