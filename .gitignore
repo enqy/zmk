@@ -9,3 +9,4 @@
 __pycache__
 .direnv/
 result
+/app/.cache/
