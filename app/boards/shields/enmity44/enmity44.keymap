@@ -15,14 +15,12 @@
     behaviors {
         f1f2: f1f2 {
             compatible = "zmk,behavior-tap-dance";
-            label = "f1f2";
             #binding-cells = <0>;
             tapping-term-ms = <200>;
             bindings = <&kp F1>, <&kp F2>;
         };
         f11f12: f11f12 {
             compatible = "zmk,behavior-tap-dance";
-            label = "f11f12";
             #binding-cells = <0>;
             tapping-term-ms = <200>;
             bindings = <&kp F11>, <&kp F12>;
