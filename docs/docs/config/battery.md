@@ -18,13 +18,24 @@ Definition file: [zmk/app/Kconfig](https://github.com/zmkfirmware/zmk/blob/main/
 
 :::note[Default setting]
 
-While `CONFIG_ZMK_BATTERY_REPORTING` is disabled by default it is implied by `CONFIG_ZMK_BLE`, thus any board with BLE enabled will have this automatically enabled unless explicitly overriden.
+While `CONFIG_ZMK_BATTERY_REPORTING` is disabled by default it is implied by `CONFIG_ZMK_BLE`, thus any board with BLE enabled will have this automatically enabled unless explicitly overridden.
 
 :::
 
 :::note[BLE reporting on MacOS]
 
 On macOS the BLE battery reporting packets can cause the computer to wakeup from sleep. To prevent this, the battery _reporting_ service can be disabled by setting `CONFIG_BT_BAS=n`. This setting is independent of battery _monitoring_, for instance the battery level can still be indicated on a display.
+
+:::
+
+### Peripheral Battery Monitoring
+
+You can [configure ZMK to allow support for peripheral battery monitoring over BLE](system.md#split-keyboards) (e.g. when having a split keyboard with two independent and wirelessly connected sides).
+If you want to report the battery levels of both sides of a split keyboard, you should have both `CONFIG_ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_PROXY` and `CONFIG_ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_FETCHING` set to `y`.
+
+:::note[Displaying both battery levels on your host]
+
+Host support for multiple battery levels is undefined. It appears that in most of the cases only the main battery is being reported. In order to correctly display all the battery values, you probably need a special application or script.
 
 :::
 

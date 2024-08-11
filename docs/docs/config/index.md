@@ -24,16 +24,18 @@ When building with a `zmk-config` folder, ZMK will search the `zmk-config/config
 
 These files hold your personal settings for the keyboard. All files are optional. If present, they override any configuration set in the board or shield folders. Otherwise, the default configuration and/or keymap is used.
 
-When using a split keyboard, you can use a single file without the `_left` or `_right` suffix to configure both sides. For example, `corne.conf` and `corne.keymap` will apply to both `corne_left` and `corne_right`. If a shared config file exists, any left or right files will be ignored.
+When using a [split keyboard](../features/split-keyboards.md), you can use a single file without the `_left` or `_right` suffix to configure both sides. For example, `corne.conf` and `corne.keymap` will apply to both `corne_left` and `corne_right`. If a shared config file exists, any left or right files will be ignored.
 
 ### Board Folder
 
-ZMK will search for config files in either of:
+ZMK will search for config files in:
 
 - [`zmk/app/boards/arm/<board>`](https://github.com/zmkfirmware/zmk/tree/main/app/boards/arm)
-- `zmk-config/config/boards/arm/<board>`
+- `zmk-config/boards/arm/<board>`
+- `<module>/boards/arm/<board>`
+- `zmk-config/config/boards/arm/<board>` (For backwards compatibility only, do not use.)
 
-...where `<board>` is the name of the board. These files describe the hardware of the board.
+...where `<board>` is the name of the board and `<module>` is the root directory of any [included module](../features/modules.mdx). These files describe the hardware of the board.
 
 ZMK will search the board folder for the following config files:
 
@@ -48,12 +50,14 @@ For more documentation on creating and configuring a new board, see [Zephyr's bo
 
 ### Shield Folder
 
-When building with a shield, ZMK will search for config files in either of:
+When building with a shield, ZMK will search for config files in:
 
 - [`zmk/app/boards/shields/<shield>`](https://github.com/zmkfirmware/zmk/tree/main/app/boards/shields)
-- `zmk-config/config/boards/shields/<shield>`
+- `zmk-config/boards/shields/<shield>`
+- `<module>/boards/shields/<shield>`
+- `zmk-config/config/boards/shields/<shield>` (For backwards compatibility only, do not use.)
 
-...where `<shield>` is the name of the shield. These files describe the hardware of the shield that the board is plugged into.
+...where `<shield>` is the name of the shield and `<module>` is the root directory of any [included module](../features/modules.mdx). These files describe the hardware of the shield that the board is plugged into.
 
 ZMK will search the shield folder for the following config files:
 

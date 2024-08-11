@@ -6,4 +6,4 @@
 
 #include <zephyr/linker/linker-defs.h>
 
-ITERABLE_SECTION_RAM(zmk_pm_device_slots, 4)
+ITERABLE_SECTION_RAM(zmk_behavior_local_id_map, 4)

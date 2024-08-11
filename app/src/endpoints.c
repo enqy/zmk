@@ -122,57 +122,69 @@ struct zmk_endpoint_instance zmk_endpoints_selected(void) {
 
 static int send_keyboard_report(void) {
     switch (current_instance.transport) {
-#if IS_ENABLED(CONFIG_ZMK_USB)
     case ZMK_TRANSPORT_USB: {
+#if IS_ENABLED(CONFIG_ZMK_USB)
         int err = zmk_usb_hid_send_keyboard_report();
         if (err) {
             LOG_ERR("FAILED TO SEND OVER USB: %d", err);
         }
         return err;
-    }
+#else
+        LOG_ERR("USB endpoint is not supported");
+        return -ENOTSUP;
 #endif /* IS_ENABLED(CONFIG_ZMK_USB) */
+    }
 
-#if IS_ENABLED(CONFIG_ZMK_BLE)
     case ZMK_TRANSPORT_BLE: {
+#if IS_ENABLED(CONFIG_ZMK_BLE)
         struct zmk_hid_keyboard_report *keyboard_report = zmk_hid_get_keyboard_report();
         int err = zmk_hog_send_keyboard_report(&keyboard_report->body);
         if (err) {
             LOG_ERR("FAILED TO SEND OVER HOG: %d", err);
         }
         return err;
-    }
+#else
+        LOG_ERR("BLE HOG endpoint is not supported");
+        return -ENOTSUP;
 #endif /* IS_ENABLED(CONFIG_ZMK_BLE) */
     }
+    }
 
-    LOG_ERR("Unsupported endpoint transport %d", current_instance.transport);
+    LOG_ERR("Unhandled endpoint transport %d", current_instance.transport);
     return -ENOTSUP;
 }
 
 static int send_consumer_report(void) {
     switch (current_instance.transport) {
-#if IS_ENABLED(CONFIG_ZMK_USB)
     case ZMK_TRANSPORT_USB: {
+#if IS_ENABLED(CONFIG_ZMK_USB)
         int err = zmk_usb_hid_send_consumer_report();
         if (err) {
             LOG_ERR("FAILED TO SEND OVER USB: %d", err);
         }
         return err;
-    }
+#else
+        LOG_ERR("USB endpoint is not supported");
+        return -ENOTSUP;
 #endif /* IS_ENABLED(CONFIG_ZMK_USB) */
+    }
 
-#if IS_ENABLED(CONFIG_ZMK_BLE)
     case ZMK_TRANSPORT_BLE: {
+#if IS_ENABLED(CONFIG_ZMK_BLE)
         struct zmk_hid_consumer_report *consumer_report = zmk_hid_get_consumer_report();
         int err = zmk_hog_send_consumer_report(&consumer_report->body);
         if (err) {
             LOG_ERR("FAILED TO SEND OVER HOG: %d", err);
         }
         return err;
-    }
+#else
+        LOG_ERR("BLE HOG endpoint is not supported");
+        return -ENOTSUP;
 #endif /* IS_ENABLED(CONFIG_ZMK_BLE) */
     }
+    }
 
-    LOG_ERR("Unsupported endpoint transport %d", current_instance.transport);
+    LOG_ERR("Unhandled endpoint transport %d", current_instance.transport);
     return -ENOTSUP;
 }
 
@@ -194,29 +206,35 @@ int zmk_endpoints_send_report(uint16_t usage_page) {
 #if IS_ENABLED(CONFIG_ZMK_MOUSE)
 int zmk_endpoints_send_mouse_report() {
     switch (current_instance.transport) {
-#if IS_ENABLED(CONFIG_ZMK_USB)
     case ZMK_TRANSPORT_USB: {
+#if IS_ENABLED(CONFIG_ZMK_USB)
         int err = zmk_usb_hid_send_mouse_report();
         if (err) {
             LOG_ERR("FAILED TO SEND OVER USB: %d", err);
         }
         return err;
-    }
+#else
+        LOG_ERR("USB endpoint is not supported");
+        return -ENOTSUP;
 #endif /* IS_ENABLED(CONFIG_ZMK_USB) */
+    }
 
-#if IS_ENABLED(CONFIG_ZMK_BLE)
     case ZMK_TRANSPORT_BLE: {
+#if IS_ENABLED(CONFIG_ZMK_BLE)
         struct zmk_hid_mouse_report *mouse_report = zmk_hid_get_mouse_report();
         int err = zmk_hog_send_mouse_report(&mouse_report->body);
         if (err) {
             LOG_ERR("FAILED TO SEND OVER HOG: %d", err);
         }
         return err;
-    }
+#else
+        LOG_ERR("BLE HOG endpoint is not supported");
+        return -ENOTSUP;
 #endif /* IS_ENABLED(CONFIG_ZMK_BLE) */
     }
+    }
 
-    LOG_ERR("Unsupported endpoint transport %d", current_instance.transport);
+    LOG_ERR("Unhandled endpoint transport %d", current_instance.transport);
     return -ENOTSUP;
 }
 #endif // IS_ENABLED(CONFIG_ZMK_MOUSE)
@@ -245,7 +263,8 @@ static int endpoints_handle_set(const char *name, size_t len, settings_read_cb r
     return 0;
 }
 
-struct settings_handler endpoints_handler = {.name = "endpoints", .h_set = endpoints_handle_set};
+SETTINGS_STATIC_HANDLER_DEFINE(endpoints, "endpoints", NULL, endpoints_handle_set, NULL, NULL);
+
 #endif /* IS_ENABLED(CONFIG_SETTINGS) */
 
 static bool is_usb_ready(void) {
@@ -304,17 +323,7 @@ static struct zmk_endpoint_instance get_selected_instance(void) {
 
 static int zmk_endpoints_init(void) {
 #if IS_ENABLED(CONFIG_SETTINGS)
-    settings_subsys_init();
-
-    int err = settings_register(&endpoints_handler);
-    if (err) {
-        LOG_ERR("Failed to register the endpoints settings handler (err %d)", err);
-        return err;
-    }
-
     k_work_init_delayable(&endpoints_save_work, endpoints_save_preferred_work);
-
-    settings_load_subtree("endpoints");
 #endif
 
     current_instance = get_selected_instance();
@@ -322,7 +331,7 @@ static int zmk_endpoints_init(void) {
     return 0;
 }
 
-static void disconnect_current_endpoint(void) {
+void zmk_endpoints_clear_current(void) {
     zmk_hid_keyboard_clear();
     zmk_hid_consumer_clear();
 #if IS_ENABLED(CONFIG_ZMK_MOUSE)
@@ -338,7 +347,7 @@ static void update_current_endpoint(void) {
 
     if (!zmk_endpoint_instance_eq(new_instance, current_instance)) {
         // Cancel all current keypresses so keys don't stay held on the old endpoint.
-        disconnect_current_endpoint();
+        zmk_endpoints_clear_current();
 
         current_instance = new_instance;
 

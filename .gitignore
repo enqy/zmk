@@ -5,10 +5,17 @@
 /zephyr
 /zmk-config
 /build
+
+# macOS
 *.DS_Store
+
+# Python
 __pycache__
 .direnv/
 result
 /app/.cache/
 .python-version
 .venv
+
+# clangd
+app/.cache/
